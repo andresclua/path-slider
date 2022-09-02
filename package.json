@@ -2,12 +2,15 @@
   "name": "clipslider",
   "version": "0.0.1",
   "description": "clip path slider",
-  "main": "index.js",
   "scripts": {
     "clean": "rimraf dist",
     "start": "npm run clean && parcel serve ./src/index.html",
     "build": "npm run clean && parcel build ./src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andresclua/path-slider.git"
   },
   "author": "andresclua",
   "license": "ISC",

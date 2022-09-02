@@ -142,14 +142,14 @@
       this[globalName] = mainExports;
     }
   }
-})({"ShInH":[function(require,module,exports) {
+})({"cVgJb":[function(require,module,exports) {
 "use strict";
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
-module.bundle.HMR_BUNDLE_ID = "890e741a975ef6c8";
+module.bundle.HMR_BUNDLE_ID = "ba60c367739bf03c";
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, chrome, browser, globalThis, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */ /*::
 import type {
   HMRAsset,
@@ -531,9 +531,485 @@ function hmrAcceptRun(bundle, id) {
     acceptedAssets[id] = true;
 }
 
-},{}],"8lqZg":[function(require,module,exports) {
-console.log("test");
+},{}],"ebWYT":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+var _clipPath = require("./ClipPath");
+var _clipPathDefault = parcelHelpers.interopDefault(_clipPath);
+var config = {
+    parent: document.getElementById("clipSlider"),
+    dots: true,
+    controls: true
+};
+new (0, _clipPathDefault.default)(config);
 
-},{}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire79b3")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./ClipPath":"3b92Z"}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
 
-//# sourceMappingURL=index.975ef6c8.js.map
+},{}],"3b92Z":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsutil = require("@andresclua/jsutil");
+var _jsutilDefault = parcelHelpers.interopDefault(_jsutil);
+var _swipeListener = require("swipe-listener");
+var _swipeListenerDefault = parcelHelpers.interopDefault(_swipeListener);
+class Sketch {
+    constructor(config){
+        this.JSUTIL = new (0, _jsutilDefault.default)();
+        this.options = config;
+        this.slides = document.querySelectorAll(".slide");
+        this.slideActiveClass = "b--clip-slider-a__list-group__list-item--is-active";
+        this.slideActiveClassPrev = "b--clip-slider-a__list-group__list-item--prev";
+        this.dotActiveClass = "b--clip-slider-a__pagination__item--is-active";
+        this.dotItem = "b--clip-slider-a__pagination__item";
+        this.slidesCount = this.slides.length;
+        this.sliderSpeed = 1300; // needs to match with SCSS Variable
+        this.isSliderPlaying = false;
+        this.init();
+        this.events();
+    }
+    init() {
+        // Create all slides with default configuration
+        this.slides.forEach((element, index)=>{
+            var i = index + 1;
+            this.JSUTIL.addClass(element, "slide-" + i);
+            element.setAttribute("dataset", i);
+        // element.dataset.slide = i;
+        });
+        // if dots where selected create pagination
+        if (this.options.dots) this.addDots();
+        // if controlls where selected create pagination
+        if (this.options.controls) this.addControls();
+    }
+    addControls() {
+        // add comment div
+        let comment = document.createComment(" add controls");
+        this.options.parent.appendChild(comment);
+        // add parent ul
+        let controls = document.createElement("div");
+        controls.setAttribute("class", "b--clip-slider-a__controls");
+        this.options.parent.appendChild(controls);
+        for(let i = 0; i < 2; i++){
+            var button = document.createElement("button");
+            button.setAttribute("class", "b--clip-slider-a__controls__item");
+            if (i == 0) {
+                this.JSUTIL.addClass(button, "b--clip-slider-a__controls__item--prev");
+                button.innerHTML = "Prev";
+            } else {
+                this.JSUTIL.addClass(button, "b--clip-slider-a__controls__item--next");
+                button.innerHTML = "Next";
+            }
+            controls.appendChild(button);
+        }
+    }
+    addDots() {
+        // add comment div
+        let comment = document.createComment(" add pagination");
+        this.options.parent.appendChild(comment);
+        // add parent ul
+        let ul = document.createElement("ul");
+        ul.setAttribute("id", "pagination");
+        ul.setAttribute("class", "b--clip-slider-a__pagination");
+        this.options.parent.appendChild(ul);
+        for(let i = 0; i < this.slidesCount; i++){
+            var li = document.createElement("li");
+            li.setAttribute("class", this.dotItem);
+            li.setAttribute("data-dot", parseInt(i + 1));
+            if (i == 0) this.JSUTIL.addClass(li, this.dotActiveClass);
+            ul.appendChild(li);
+        }
+    }
+    events() {
+        if (this.options.controls) {
+            this.slideControl = document.querySelectorAll(".b--clip-slider-a__controls__item");
+            this.slideControl.forEach((element, index)=>{
+                element.addEventListener("click", (event)=>this.handleSlide({
+                        event: event,
+                        element: element
+                    }));
+            });
+        }
+        if (this.options.dots) {
+            this.dotControl = document.querySelectorAll("." + this.dotItem);
+            this.dotControl.forEach((element, index)=>{
+                element.addEventListener("click", (event)=>this.goToSlide({
+                        event: event,
+                        element: element,
+                        clickedDot: index
+                    }));
+            });
+        }
+        this.listener = (0, _swipeListenerDefault.default)(this.options.parent);
+        this.options.parent.addEventListener("swipe", (e)=>{
+            this.directions = e.detail.directions;
+            if (this.directions.left) this.handleSlide({
+                element: document.querySelector(".b--clip-slider-a__controls__item--next")
+            });
+            if (this.directions.right) this.handleSlide({
+                element: document.querySelector(".b--clip-slider-a__controls__item--prev")
+            });
+        });
+    }
+    moveToNext(payload, index) {
+        // prevent double tap
+        if (this.isSliderPlaying) return;
+        this.isSliderPlaying = true;
+        // get right
+        var isRight = payload.element.classList.contains("b--clip-slider-a__controls__item--next");
+        // get current active
+        var currentActive = document.querySelector(".b--clip-slider-a__list-group__list-item." + this.slideActiveClass);
+        var newActive = document.querySelector(".slide-" + index);
+        this.JSUTIL.removeClass(currentActive, this.slideActiveClass, this.slideActiveClassPrev);
+        this.JSUTIL.addClass(newActive, this.slideActiveClass);
+        if (!isRight) this.JSUTIL.addClass(newActive, this.slideActiveClassPrev);
+        var prevIndex = index - 1;
+        if (prevIndex < 1) prevIndex = this.slidesCount;
+        this.JSUTIL.addClass(document.querySelector(".slide-" + prevIndex), this.slideActiveClassPrev);
+        setTimeout(()=>{
+            this.isSliderPlaying = false;
+        }, this.sliderSpeed * 0.5);
+    }
+    goToSlide(payload) {
+        var currentDot = document.querySelector("." + this.dotActiveClass);
+        this.JSUTIL.removeClass(currentDot, this.dotActiveClass);
+        var currentActive = payload.arrow ? document.querySelector('[data-dot="' + payload.clickedDot + '"]') : payload.element;
+        var index = payload.arrow ? payload.clickedDot : payload.clickedDot + 1;
+        this.JSUTIL.addClass(currentActive, this.dotActiveClass);
+        this.moveToNext(payload, index);
+    }
+    handleSlide(payload) {
+        var isRight = payload.element.classList.contains("b--clip-slider-a__controls__item--next");
+        // get current active
+        var currentActive = document.querySelector(".b--clip-slider-a__list-group__list-item." + this.slideActiveClass);
+        var index = +currentActive.dataset.slide;
+        isRight ? index++ : index--;
+        if (index < 1) index = this.slidesCount;
+        if (index > this.slidesCount) index = 1;
+        if (this.options.controls) {
+            payload.clickedDot = index;
+            payload.arrow = true;
+            this.goToSlide(payload, index);
+        } else this.moveToNext(payload, index);
+    }
+}
+exports.default = Sketch;
+
+},{"@andresclua/jsutil":"g3iME","swipe-listener":"2nCZO","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"g3iME":[function(require,module,exports) {
+module.exports = require("./src/js_helper");
+
+},{"./src/js_helper":"iC7g6"}],"iC7g6":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class JSUTIL {
+    _getElements(id) {
+        if (typeof id == "object") return [
+            id
+        ];
+        else return document.querySelectorAll(id);
+    }
+    // .hide(selector)
+    hide(sel) {
+        this._hideElements(this._getElements(sel));
+    }
+    _hideElements(elements) {
+        var i, l = elements.length;
+        for(i = 0; i < l; i++)this._hideElement(elements[i]);
+    }
+    _hideElement(element) {
+        this._styleElement(element, "display", "none");
+    }
+    //.show(selector)
+    show(sel, a) {
+        var elements = this._getElements(sel);
+        if (a) this._hideElements(elements);
+        this._showElements(elements);
+    }
+    _showElements(elements) {
+        var i, l = elements.length;
+        for(i = 0; i < l; i++)this._showElement(elements[i]);
+    }
+    _showElement(element) {
+        this._styleElement(element, "display", "block");
+    }
+    //addStyle [element, property, value]
+    addStyle(sel, prop, val) {
+        this._styleElements(this._getElements(sel), prop, val);
+    }
+    _styleElements(elements, prop, val) {
+        var i, l = elements.length;
+        for(i = 0; i < l; i++)this._styleElement(elements[i], prop, val);
+    }
+    _styleElement(element, prop, val) {
+        element.style.setProperty(prop, val);
+    }
+    //toggleShow(selector)
+    toggleShow(sel) {
+        var i, x = this._getElements(sel), l = x.length;
+        for(i = 0; i < l; i++)if (x[i].style.display == "none") this._styleElement(x[i], "display", "block");
+        else this._styleElement(x[i], "display", "none");
+    }
+    // addClass(selector,'class')
+    addClass(sel, name) {
+        this._addClassElements(this._getElements(sel), name);
+    }
+    _addClassElements(elements, name) {
+        var i, l = elements.length;
+        for(i = 0; i < l; i++)this._addClassElement(elements[i], name);
+    }
+    _addClassElement(element, name) {
+        var i, arr1, arr2;
+        arr1 = element.className.split(" ");
+        arr2 = name.split(" ");
+        for(i = 0; i < arr2.length; i++)if (arr1.indexOf(arr2[i]) == -1) element.className += " " + arr2[i];
+    }
+    //removeClass(selector,'class')
+    removeClass(sel, name) {
+        this._removeClassElements(this._getElements(sel), name);
+    }
+    _removeClassElements(elements, name) {
+        var i, l = elements.length, arr1, arr2, j;
+        for(i = 0; i < l; i++)this._removeClassElement(elements[i], name);
+    }
+    _removeClassElement(element, name) {
+        var i, arr1, arr2;
+        arr1 = element.className.split(" ");
+        arr2 = name.split(" ");
+        for(i = 0; i < arr2.length; i++)while(arr1.indexOf(arr2[i]) > -1)arr1.splice(arr1.indexOf(arr2[i]), 1);
+        element.className = arr1.join(" ");
+    }
+    //ToggleClass('class')
+    toggleClass(sel, c1, c2) {
+        this._toggleClassElements(this._getElements(sel), c1, c2);
+    }
+    _toggleClassElements(elements, c1, c2) {
+        var i, l = elements.length;
+        for(i = 0; i < l; i++)this._toggleClassElement(elements[i], c1, c2);
+    }
+    _toggleClassElement(element, c1, c2) {
+        var t1, t2, t1Arr, t2Arr, j, arr, allPresent;
+        t1 = c1 || "";
+        t2 = c2 || "";
+        t1Arr = t1.split(" ");
+        t2Arr = t2.split(" ");
+        arr = element.className.split(" ");
+        if (t2Arr.length == 0) {
+            allPresent = true;
+            for(j = 0; j < t1Arr.length; j++)if (arr.indexOf(t1Arr[j]) == -1) allPresent = false;
+            if (allPresent) this._removeClassElement(element, t1);
+            else this._addClassElement(element, t1);
+        } else {
+            allPresent = true;
+            for(j = 0; j < t1Arr.length; j++)if (arr.indexOf(t1Arr[j]) == -1) allPresent = false;
+            if (allPresent) {
+                this._removeClassElement(element, t1);
+                this._addClassElement(element, t2);
+            } else {
+                this._removeClassElement(element, t2);
+                this._addClassElement(element, t1);
+            }
+        }
+    }
+    // BROWSER DETECTION
+    getBrowser(browser) {
+        switch(browser){
+            // CHROME 1+
+            case "chrome":
+                return navigator.userAgent.indexOf("Chrome") != -1 && !navigator.userAgent.match(/edg/i) || navigator.userAgent.indexOf("CriOS") >= 0;
+            // SAFARI 3.0+
+            case "safari":
+                return /^((?!chrome|android).)*safari/i.test(navigator.userAgent) && !(navigator.userAgent.indexOf("CriOS") >= 0);
+            // FIREFOX 1.0+
+            case "firefox":
+                return typeof InstallTrigger !== "undefined";
+            // INTERNET EXPLORER 6-11
+            case "ie":
+                return !!document.documentMode;
+            // EDGE 20+
+            case "edge":
+                return navigator.userAgent.match(/edg/i) || navigator.userAgent.indexOf("Edge/") != -1 ? true : false;
+            default:
+                return null;
+        }
+    }
+    getTypeDevice(system) {
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        switch(system){
+            case "touch":
+                return "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+            case "android":
+                return /android/i.test(userAgent);
+            case "ios":
+                return typeof navigator.standalone === "boolean";
+            default:
+                return null;
+        }
+    }
+}
+exports.default = JSUTIL;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2nCZO":[function(require,module,exports) {
+"use strict";
+var _extends = Object.assign || function(a) {
+    for(var b, c = 1; c < arguments.length; c++)for(var d in b = arguments[c], b)Object.prototype.hasOwnProperty.call(b, d) && (a[d] = b[d]);
+    return a;
+}, SwipeListener = function(a, b) {
+    if (a) {
+        "undefined" != typeof window && function() {
+            function a(a, b) {
+                b = b || {
+                    bubbles: !1,
+                    cancelable: !1,
+                    detail: void 0
+                };
+                var c = document.createEvent("CustomEvent");
+                return c.initCustomEvent(a, b.bubbles, b.cancelable, b.detail), c;
+            }
+            return "function" != typeof window.CustomEvent && void (a.prototype = window.Event.prototype, window.CustomEvent = a);
+        }();
+        b || (b = {}), b = _extends({}, {
+            minHorizontal: 10,
+            minVertical: 10,
+            deltaHorizontal: 3,
+            deltaVertical: 5,
+            preventScroll: !1,
+            lockAxis: !0,
+            touch: !0,
+            mouse: !0
+        }, b);
+        var c = [], d = !1, e = function() {
+            d = !0;
+        }, f = function(a) {
+            d = !1, h(a);
+        }, g = function(a) {
+            d && (a.changedTouches = [
+                {
+                    clientX: a.clientX,
+                    clientY: a.clientY
+                }
+            ], i(a));
+        };
+        b.mouse && (a.addEventListener("mousedown", e), a.addEventListener("mouseup", f), a.addEventListener("mousemove", g));
+        var h = function(d) {
+            var e = Math.abs, f = Math.max, g = Math.min;
+            if (c.length) {
+                for(var h = "function" == typeof TouchEvent && d instanceof TouchEvent, j = [], k = [], l = {
+                    top: !1,
+                    right: !1,
+                    bottom: !1,
+                    left: !1
+                }, m = 0; m < c.length; m++)j.push(c[m].x), k.push(c[m].y);
+                var i = j[0], n = j[j.length - 1], o = k[0], p = k[k.length - 1], q = {
+                    x: [
+                        i,
+                        n
+                    ],
+                    y: [
+                        o,
+                        p
+                    ]
+                };
+                if (1 < c.length) {
+                    var r = {
+                        detail: _extends({
+                            touch: h,
+                            target: d.target
+                        }, q)
+                    }, s = new CustomEvent("swiperelease", r);
+                    a.dispatchEvent(s);
+                }
+                var t = j[0] - j[j.length - 1], u = "none";
+                u = 0 < t ? "left" : "right";
+                var v, w = g.apply(Math, j), x = f.apply(Math, j);
+                if (e(t) >= b.minHorizontal && ("left" == u ? (v = e(w - j[j.length - 1]), v <= b.deltaHorizontal && (l.left = !0)) : "right" == u && (v = e(x - j[j.length - 1]), v <= b.deltaHorizontal && (l.right = !0))), t = k[0] - k[k.length - 1], u = "none", u = 0 < t ? "top" : "bottom", w = g.apply(Math, k), x = f.apply(Math, k), e(t) >= b.minVertical && ("top" == u ? (v = e(w - k[k.length - 1]), v <= b.deltaVertical && (l.top = !0)) : "bottom" == u && (v = e(x - k[k.length - 1]), v <= b.deltaVertical && (l.bottom = !0))), c = [], l.top || l.right || l.bottom || l.left) {
+                    b.lockAxis && ((l.left || l.right) && e(i - n) > e(o - p) ? l.top = l.bottom = !1 : (l.top || l.bottom) && e(i - n) < e(o - p) && (l.left = l.right = !1));
+                    var y = {
+                        detail: _extends({
+                            directions: l,
+                            touch: h,
+                            target: d.target
+                        }, q)
+                    }, z = new CustomEvent("swipe", y);
+                    a.dispatchEvent(z);
+                } else {
+                    var A = new CustomEvent("swipecancel", {
+                        detail: _extends({
+                            touch: h,
+                            target: d.target
+                        }, q)
+                    });
+                    a.dispatchEvent(A);
+                }
+            }
+        }, i = function(d) {
+            var e = d.changedTouches[0];
+            if (c.push({
+                x: e.clientX,
+                y: e.clientY
+            }), 1 < c.length) {
+                var f = c[0].x, g = c[c.length - 1].x, h = c[0].y, i = c[c.length - 1].y, j = {
+                    detail: {
+                        x: [
+                            f,
+                            g
+                        ],
+                        y: [
+                            h,
+                            i
+                        ],
+                        touch: "function" == typeof TouchEvent && d instanceof TouchEvent,
+                        target: d.target
+                    }
+                }, k = new CustomEvent("swiping", j), l = !0 === b.preventScroll || "function" == typeof b.preventScroll && b.preventScroll(k);
+                l && d.preventDefault(), a.dispatchEvent(k);
+            }
+        }, j = !1;
+        try {
+            var k = Object.defineProperty({}, "passive", {
+                get: function() {
+                    j = {
+                        passive: !b.preventScroll
+                    };
+                }
+            });
+            window.addEventListener("testPassive", null, k), window.removeEventListener("testPassive", null, k);
+        } catch (a1) {}
+        return b.touch && (a.addEventListener("touchmove", i, j), a.addEventListener("touchend", h)), {
+            off: function() {
+                a.removeEventListener("touchmove", i, j), a.removeEventListener("touchend", h), a.removeEventListener("mousedown", e), a.removeEventListener("mouseup", f), a.removeEventListener("mousemove", g);
+            }
+        };
+    }
+};
+"undefined" != typeof module.exports ? (module.exports = SwipeListener, module.exports.default = SwipeListener) : "function" == typeof define && define.amd ? define([], function() {
+    return SwipeListener;
+}) : window.SwipeListener = SwipeListener;
+
+},{}]},["cVgJb","ebWYT"], "ebWYT", "parcelRequire79b3")
+
+//# sourceMappingURL=index.739bf03c.js.map

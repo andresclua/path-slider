@@ -144,9 +144,11 @@ export default class Sketch {
     
     handleSlide(payload){
         var isRight = payload.element.classList.contains('b--clip-slider-a__controls__item--next');
+        
         // get current active
-        var currentActive = document.querySelector('.b--clip-slider-a__list-group__list-item.' +this.slideActiveClass);
-
+        var currentActive = document.querySelector('.b--clip-slider-a__list-group__list-item' +this.slideActiveClass);
+        console.log(this.slideActiveClass)
+        
         var index = +currentActive.dataset.slide;
         (isRight) ? index++ : index--;
         if (index < 1) index = this.slidesCount;

@@ -4,3 +4,6 @@ dist
 /.parcel-cache
 /dist
 /node_modules
+.cache/
+.parcel-cache/
+/.parcel-cache

@@ -1,5 +1,5 @@
 {
-  "name": "clipslider",
+  "name": "@andresclua/clipslider",
   "version": "0.0.1",
   "description": "clip path slider",
   "scripts": {
